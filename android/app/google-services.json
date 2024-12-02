@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "703315580403",
+    "project_id": "meroom-e0917",
+    "storage_bucket": "meroom-e0917.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703315580403:android:ddd9bca7d747e2446b2e86",
+        "android_client_info": {
+          "package_name": "com.example.mirum_list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIrw9_bpEbozsj_T-9I0Q5f5cb3dJj-Cg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
