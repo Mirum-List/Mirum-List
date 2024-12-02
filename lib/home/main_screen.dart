@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getCurrentPage() {
     switch (_selectedIndex) {
       case 0:
-        return const ListViewScreen();
+        return ListViewScreen();
       case 1:
         return const CalendarScreen();
       case 2:
@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
       case 3:
         return const LogScreen();
       default:
-        return const ListViewScreen();
+        return ListViewScreen();
     }
   }
 
