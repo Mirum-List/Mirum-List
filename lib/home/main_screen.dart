@@ -1,5 +1,3 @@
-// lib/home/main_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mirum_list/Log/log_screen.dart';
@@ -29,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getCurrentPage() {
     switch (_selectedIndex) {
       case 0:
-        return ListViewScreen();
+        return  ListViewScreen();
       case 1:
         return const CalendarScreen();
       case 2:
@@ -41,18 +39,31 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  String _getAppBarTitle() {
+  Widget _getAppBarTitle() {
     switch (_selectedIndex) {
       case 0:
-        return '리스트 보기';
+        return const Text('리스트 보기');
       case 1:
-        return DateFormat('yyyy.MM.dd').format(DateTime.now());
+        return Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'Today is  ',
+                style: const TextStyle(fontSize: 14.0, color: Colors.black),
+              ),
+              TextSpan(
+                text: DateFormat('yyyy.MM.dd').format(DateTime.now()),
+                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        );
       case 2:
-        return '리스트 편집';
+        return const Text('리스트 편집');
       case 3:
-        return '로그';
+        return const Text('로그');
       default:
-        return '';
+        return const Text('');
     }
   }
 
@@ -64,22 +75,15 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0), // 텍스트를 아래로 내림
-          child: Text(
-            _getAppBarTitle(),
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 24, color: whiteColor),
-          ),
-        ),
+        title: _getAppBarTitle(),
         backgroundColor: mainColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
+                context,
+                MaterialPageRoute(
                   builder: (context) => const SettingsScreen(),
                 ),
               );
@@ -106,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications_none),
-            label: "로그",
+            label: '로그',
           ),
         ],
         currentIndex: _selectedIndex,
