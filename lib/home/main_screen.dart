@@ -7,6 +7,7 @@ import 'package:mirum_list/calendar/calendar_screen.dart';
 import 'package:mirum_list/const/colors.dart';
 import 'package:mirum_list/editList/edit_list_screen.dart';
 import 'package:mirum_list/listView/list_view_screen.dart';
+import 'package:mirum_list/settings/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MainScreen extends StatefulWidget {
@@ -74,8 +75,15 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: mainColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _signOut,
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
