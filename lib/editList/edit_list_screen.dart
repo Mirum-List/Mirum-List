@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../const/colors.dart';
 import 'package:intl/intl.dart'; // 날짜 형식 처리를 위한 패키지
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 패키지 추가
+import '../model/task.dart'; // Task 모델 임포트
 
 class EditListScreen extends StatefulWidget {
   const EditListScreen({super.key});
@@ -200,6 +201,15 @@ class _EditListScreenState extends State<EditListScreen> {
       return;
     }
 
+    // 현재 사용자 가져오기 (옵션: 사용자 인증을 사용하는 경우)
+    // User? user = FirebaseAuth.instance.currentUser;
+    // if (user == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('사용자가 인증되지 않았습니다.')),
+    //   );
+    //   return;
+    // }
+
     // 마감기한과 시간을 합쳐서 하나의 DateTime 객체 생성
     DateTime deadlineDateTime = DateTime(
       _selectedDate.year,
@@ -215,7 +225,9 @@ class _EditListScreenState extends State<EditListScreen> {
       'deadline': Timestamp.fromDate(deadlineDateTime),
       'importance': _selectedImportance,
       'category': _selectedCategory,
+      'completed': false, // 완료 여부 기본 값 false 설정
       'createdAt': FieldValue.serverTimestamp(), // 생성 시간
+      // 'userId': user?.uid, // 사용자 인증을 사용하는 경우 추가
     };
 
     try {
@@ -285,10 +297,6 @@ class _EditListScreenState extends State<EditListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('할 일 작성'),
-        backgroundColor: mainColor,
-      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -336,14 +344,16 @@ class _EditListScreenState extends State<EditListScreen> {
                           GestureDetector(
                             onTap: _pickDate,
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.calendar_today, size: 16.0, color: mainColor),
+                                  Icon(Icons.calendar_today,
+                                      size: 16.0, color: mainColor),
                                   SizedBox(width: 4.0),
                                   Text(
                                     DateFormat('yyyy-MM-dd').format(_selectedDate),
@@ -360,14 +370,16 @@ class _EditListScreenState extends State<EditListScreen> {
                           GestureDetector(
                             onTap: _pickTime,
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.access_time, size: 16.0, color: mainColor),
+                                  Icon(Icons.access_time,
+                                      size: 16.0, color: mainColor),
                                   SizedBox(width: 4.0),
                                   Text(
                                     _selectedTime.format(context),
