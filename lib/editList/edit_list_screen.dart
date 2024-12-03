@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import '../const/colors.dart';
 import 'package:intl/intl.dart'; // 날짜 형식 처리를 위한 패키지
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 패키지 추가
 
 class EditListScreen extends StatefulWidget {
   const EditListScreen({super.key});
@@ -22,6 +23,9 @@ class _EditListScreenState extends State<EditListScreen> {
   int _selectedImportance = 1;
   String _selectedCategory = '일상';
   List<String> _categories = ['일상', '음악', '운동', '공부'];
+
+  // Firestore 인스턴스
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // 컨트롤러 해제
   @override
@@ -186,6 +190,56 @@ class _EditListScreenState extends State<EditListScreen> {
     }
   }
 
+  // 할 일 추가 함수
+  Future<void> _addTask() async {
+    String title = _titleController.text.trim();
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('제목을 입력해주세요.')),
+      );
+      return;
+    }
+
+    // 마감기한과 시간을 합쳐서 하나의 DateTime 객체 생성
+    DateTime deadlineDateTime = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
+
+    // 할 일 데이터
+    Map<String, dynamic> taskData = {
+      'title': title,
+      'deadline': Timestamp.fromDate(deadlineDateTime),
+      'importance': _selectedImportance,
+      'category': _selectedCategory,
+      'createdAt': FieldValue.serverTimestamp(), // 생성 시간
+    };
+
+    try {
+      await _firestore.collection('tasks').add(taskData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('할 일이 추가되었습니다!')),
+      );
+
+      // 필드 초기화
+      _titleController.clear();
+      setState(() {
+        _selectedDate = DateTime.now();
+        _selectedTime = TimeOfDay.now();
+        _selectedImportance = 1;
+        _selectedCategory = _categories.isNotEmpty ? _categories[0] : '';
+      });
+    } catch (e) {
+      print('Error adding task: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('할 일 추가에 실패했습니다. 다시 시도해주세요.')),
+      );
+    }
+  }
+
   // 카테고리 추가 다이얼로그
   void _showAddCategoryDialog() {
     showDialog(
@@ -231,6 +285,10 @@ class _EditListScreenState extends State<EditListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('할 일 작성'),
+        backgroundColor: mainColor,
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -359,37 +417,7 @@ class _EditListScreenState extends State<EditListScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // 할 일 추가 로직 구현
-                  String title = _titleController.text.trim();
-                  if (title.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('제목을 입력해주세요.')),
-                    );
-                    return;
-                  }
-                  // 예시: 할 일 정보 출력
-                  print('제목: $title');
-                  print(
-                      '마감기한: ${DateFormat('yyyy-MM-dd').format(_selectedDate)} ${_selectedTime.format(context)}');
-                  print('중요도: $_selectedImportance');
-                  print('카테고리: $_selectedCategory');
-
-                  // 사용자에게 성공 메시지 표시
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('할 일이 추가되었습니다!')),
-                  );
-
-                  // 필드 초기화
-                  _titleController.clear();
-                  setState(() {
-                    _selectedDate = DateTime.now();
-                    _selectedTime = TimeOfDay.now();
-                    _selectedImportance = 1;
-                    _selectedCategory =
-                        _categories.isNotEmpty ? _categories[0] : '';
-                  });
-                },
+                onPressed: _addTask, // Firestore에 데이터 저장 함수 호출
                 style: ElevatedButton.styleFrom(
                   backgroundColor: mainColor,
                   padding: EdgeInsets.symmetric(vertical: 16.0),
