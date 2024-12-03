@@ -33,9 +33,8 @@ class _LogScreenState extends State<LogScreen> {
           .get();
 
       // Task 모델로 변환
-      List<Task> tasks = snapshot.docs
-          .map((doc) => Task.fromDocument(doc))
-          .toList();
+      List<Task> tasks =
+          snapshot.docs.map((doc) => Task.fromDocument(doc)).toList();
 
       setState(() {
         _tasks = tasks;
@@ -84,7 +83,8 @@ class _LogScreenState extends State<LogScreen> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('마감기한: ${DateFormat('yyyy-MM-dd – kk:mm').format(task.deadline)}'),
+                Text(
+                    '마감기한: ${DateFormat('yyyy-MM-dd – kk:mm').format(task.deadline)}'),
                 Text('카테고리: ${task.category}'),
               ],
             ),
@@ -115,10 +115,6 @@ class _LogScreenState extends State<LogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('로그 보기'),
-        backgroundColor: mainColor,
-      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
