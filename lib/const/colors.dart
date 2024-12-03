@@ -7,3 +7,5 @@ const deepBlueColor = Color(0xFF5B87C8);
 const normalBlueColor = Color(0xFF90AFDD);
 const lightBlueColor = Color(0xFFADCDFC);
 const normalRedColor = Color(0xFFE57373);
+const lightpurple = Color.fromARGB(255, 101, 50, 183);
+const lightorange = Color.fromARGB(255, 240, 155, 36);
