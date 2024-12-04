@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: mainColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings), 
             onPressed: () {
               Navigator.push(
                 context,
