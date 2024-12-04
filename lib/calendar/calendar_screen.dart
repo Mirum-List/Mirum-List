@@ -22,11 +22,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   final Map<String, Color> _categoryColors = {
 
-    'Work': Colors.blue,
-    'Study': Colors.green,
-    'Exercise': Colors.orange,
-    'Relax': Colors.purple,
-    'Other': Colors.grey,
+    '운동': lightpurple,
+    '공부': lightorange,
+    '음악': normalBlueColor,
+    '일상': moreDeepBlueColor,
+    'Other': lightBlueColor,
+
   };
 
   // Firestore 데이터 로드
@@ -115,11 +116,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     todayDecoration: BoxDecoration(
                       color: deepBlueColor, // 오늘 날짜 표시
                       shape: BoxShape.circle,
+
                     ),
+
                     selectedDecoration: BoxDecoration(
                       color: moreDeepBlueColor, // 선택된 날짜 표시
                       shape: BoxShape.circle,
                     ),
+                    cellMargin: EdgeInsets.all(15),
+
                   ),
                   // 날짜별 할 일 갯수 표시
                   calendarBuilders: CalendarBuilders(
@@ -130,22 +135,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       return Column(
                         children: [
-                          const SizedBox(height: 32),
-                          for (var i = 0; i < (dayEvents.length > 3 ? 3 : dayEvents.length); i++)
+                          const SizedBox(height: 37),
+                          for (var i = 0; i < (dayEvents.length > 2 ? 2 : dayEvents.length); i++)
                             Container(
-                              width: 50,
-                              height: 4,
-                              margin: const EdgeInsets.symmetric(vertical: 2.0),
+                              width: 30,
+                              height: 1.5,
+                              margin: const EdgeInsets.symmetric(vertical: 0.5),
                               decoration: BoxDecoration(
                                 color: _categoryColors[dayEvents[i]['category']] ?? Colors.grey, // 카테고리별 색상
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                          if (dayEvents.length > 3)
+                          if (dayEvents.length > 2)
                             Text(
-                              '+${dayEvents.length - 3}',
+                              '+${dayEvents.length - 2}',
                               style: const TextStyle(
-                                fontSize: 10,
+                                fontSize: 7,
                                 color: Colors.grey,
                               ),
                             ),
