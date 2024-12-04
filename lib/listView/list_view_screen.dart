@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:mirum_list/const/colors.dart';
 
+// import 'package:mirum_list/listView/modify_list_screen.dart';
 class ListViewScreen extends StatefulWidget {
   @override
   _ListViewScreenState createState() => _ListViewScreenState();
@@ -48,7 +49,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: whiteColor,
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -63,15 +64,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedButton == 'deadline'
-                      ? Colors.grey
-                      : Colors.grey[350],
+                  backgroundColor:
+                      selectedButton == 'deadline' ? greyColor : ligthGreyColor,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                 ),
-                child:
-                    const Text('마감 기한', style: TextStyle(color: Colors.white)),
+                child: const Text('마감 기한', style: TextStyle(color: whiteColor)),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
@@ -82,8 +81,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedButton == 'importance'
-                      ? Colors.grey
-                      : Colors.grey[350],
+                      ? greyColor
+                      : ligthGreyColor,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
@@ -99,8 +98,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedButton == 'recommendation'
-                      ? Colors.grey
-                      : Colors.grey[350],
+                      ? greyColor
+                      : ligthGreyColor,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
@@ -115,22 +114,23 @@ class _ListViewScreenState extends State<ListViewScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
-              height: 40, 
+              height: 40,
               decoration: BoxDecoration(
-                color: mainColor2, 
-                borderRadius: BorderRadius.circular(100), 
+                color: mainColor2,
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextField(
                 controller: _searchController, // 컨트롤러 연결
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '검색',
-                  hintStyle: TextStyle(color: Colors.black),
+                  hintStyle: TextStyle(color: blackColor),
                   border: InputBorder.none,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  suffixIcon: Icon(Icons.search, color: Colors.black), // 검색 아이콘 추가
+                  suffixIcon:
+                      Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
                 ),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: blackColor),
               ),
             ),
           ),
@@ -142,20 +142,21 @@ class _ListViewScreenState extends State<ListViewScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  color: Colors.grey[200],
+                  color: ligthGreyColor,
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('tasks')
+                        .where('completed', isEqualTo: false)
                         .orderBy(
                             selectedButton == 'importance'
                                 ? 'importance'
                                 : 'deadline',
                             descending: selectedButton == 'importance')
-// .orderBy(
-// selectedButton == 'importance'
-// ? 'deadline'
-// : 'importance',
-// descending: selectedButton == 'deadline')
+                        .orderBy(
+                            selectedButton == 'importance'
+                                ? 'deadline'
+                                : 'importance',
+                            descending: selectedButton == 'deadline')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
@@ -172,7 +173,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
                         }
                       }).toList();
 
-
                       return ListView.builder(
                         itemCount: tasks.length,
                         padding: const EdgeInsets.all(20),
@@ -187,18 +187,30 @@ class _ListViewScreenState extends State<ListViewScreen> {
                             padding: const EdgeInsets.only(bottom: 30),
                             child: Container(
                               width: 330,
-                              height: 120,
+                              height: 130,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: whiteColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    height: 35,
+                                    height: 32,
                                     decoration: BoxDecoration(
-                                      color: Colors.red[200],
+                                      color: () {
+                                        final now = DateTime.now();
+                                        final difference =
+                                            deadline.difference(now);
+
+                                        if (difference.inDays < 1) {
+                                          return lightRed; // 1일 이내 빨간색
+                                        } else if (difference.inDays <= 7) {
+                                          return lightYellow; // 1주일 이내 노란색
+                                        } else {
+                                          return lightgreen; // 그 외 초록색
+                                        }
+                                      }(),
                                       borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(20),
                                         topRight: Radius.circular(20),
@@ -215,12 +227,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                             DateFormat('yyyy.MM.dd')
                                                 .format(deadline),
                                             style: const TextStyle(
-                                              color: Colors.white,
+                                              color: whiteColor,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 10),
+                                        const SizedBox(width: 10),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -233,7 +245,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               child: Icon(
                                                 Icons.circle,
                                                 size: 10,
-                                                color: Colors.white, // 하얀 동그라미
+                                                color: whiteColor, // 하얀 동그라미
                                               ),
                                             ),
                                           ),
@@ -245,9 +257,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                           children: [
                                             IconButton(
                                               icon: const Icon(Icons.check,
-                                                  color: Colors.white),
+                                                  color: whiteColor),
                                               onPressed: () {
-// 완료 처리 로직 추가
+                                                FirebaseFirestore.instance
+                                                    .collection('tasks')
+                                                    .doc(task.id)
+                                                    .update(
+                                                        {'completed': true});
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
@@ -256,9 +272,20 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.edit,
-                                                  color: Colors.white),
+                                                  color: whiteColor),
                                               onPressed: () {
-// 편집 로직 추가
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) =>
+                                                //         ModifyListScreen(
+                                                //             taskId: task.id,
+                                                //             taskData: task
+                                                //                     .data()
+                                                //                 as Map<String,
+                                                //                     dynamic>),
+                                                //   ),
+                                                // );
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
@@ -267,7 +294,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete,
-                                                  color: Colors.white),
+                                                  color: whiteColor),
                                               onPressed: () {
                                                 FirebaseFirestore.instance
                                                     .collection('tasks')
@@ -309,7 +336,18 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                         horizontal: 10,
                                                         vertical: 5),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.grey[300],
+                                                  color: task['category'] ==
+                                                          '음악'
+                                                      ? normalBlueColor
+                                                      : task['category'] == '운동'
+                                                          ? lightpurple
+                                                          : task['category'] ==
+                                                                  '일상'
+                                                              ? moreDeepBlueColor
+                                                              : task['category'] ==
+                                                                      '공부'
+                                                                  ? lightorange
+                                                                  : lightBlueColor, // 기본 색상 (기타)
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
@@ -317,16 +355,39 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                   task['category'], // 카테고리
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                                    color: Colors.black,
+                                                    color: whiteColor,
                                                   ),
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
-                                              Text(
-                                                remainingTime, // 남은 시간 표시
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.red[300],
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: ligthGreyColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Text(
+                                                  remainingTime, // 남은 시간 표시
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: () {
+                                                        final now =
+                                                            DateTime.now();
+                                                        final difference =
+                                                            deadline.difference(
+                                                                now);
+
+                                                        if (difference.inDays <
+                                                            1) {
+                                                          return normalRedColor; // 1일 이내 빨간색
+                                                        } else {
+                                                          return blackColor;
+                                                        }
+                                                      }()),
                                                 ),
                                               ),
                                             ],
