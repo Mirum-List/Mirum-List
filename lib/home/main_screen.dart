@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return const EditListScreen();
       case 3:
-        return const LogScreen();
+        return LogScreen();
       default:
         return ListViewScreen();
     }
@@ -59,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         );
       case 2:
-        return const Text('리스트 편집');
+        return Text('할 일 편집');
       case 3:
         return const Text('로그');
       default:
@@ -104,7 +104,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.calendar_month),
             label: '캘린더',
           ),
-          BottomNavigationBarItem(
+          BottomNavigationBarItem(  
             icon: Icon(Icons.edit),
             label: '편집',
           ),

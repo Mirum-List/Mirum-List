@@ -297,6 +297,7 @@ class _EditListScreenState extends State<EditListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
