@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:mirum_list/const/colors.dart';
 
 class ListViewScreen extends StatefulWidget {
   @override
@@ -9,6 +10,10 @@ class ListViewScreen extends StatefulWidget {
 
 class _ListViewScreenState extends State<ListViewScreen> {
   String selectedButton = 'deadline'; // 현재 선택된 버튼을 저장
+
+  // 검색바 컴트롤러 + 변수
+  TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
 // 남은 시간을 계산하는 함수
   String calculateRemainingTime(DateTime deadline) {
@@ -20,6 +25,24 @@ class _ListViewScreenState extends State<ListViewScreen> {
     }
 
     return "${difference.inDays}일 ${difference.inHours % 24}시간 ${difference.inMinutes % 60}분";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 검색 바의 리스너 추가
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // 컨트롤러 dispose
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,6 +110,31 @@ class _ListViewScreenState extends State<ListViewScreen> {
               ),
             ],
           ),
+          //검색 바 추가
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Container(
+              height: 40, 
+              decoration: BoxDecoration(
+                color: mainColor2, 
+                borderRadius: BorderRadius.circular(100), 
+              ),
+              child: TextField(
+                controller: _searchController, // 컨트롤러 연결
+                decoration: InputDecoration(
+                  hintText: '검색',
+                  hintStyle: TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  suffixIcon: Icon(Icons.search, color: Colors.black), // 검색 아이콘 추가
+                ),
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ),
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -114,7 +162,16 @@ class _ListViewScreenState extends State<ListViewScreen> {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      final tasks = snapshot.data!.docs;
+                      // 검색어에 따라 필터링된 리스트 생성
+                      final tasks = snapshot.data!.docs.where((doc) {
+                        if (_searchQuery.isEmpty) {
+                          return true;
+                        } else {
+                          String title = doc['title'] ?? '';
+                          return title.contains(_searchQuery);
+                        }
+                      }).toList();
+
 
                       return ListView.builder(
                         itemCount: tasks.length,

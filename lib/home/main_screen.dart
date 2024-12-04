@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getCurrentPage() {
     switch (_selectedIndex) {
       case 0:
-        return  ListViewScreen();
+        return ListViewScreen();
       case 1:
         return const CalendarScreen();
       case 2:
@@ -41,31 +41,18 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _getAppBarTitle() {
+  String _getAppBarTitle() {
     switch (_selectedIndex) {
       case 0:
-        return const Text('리스트 보기');
+        return '리스트 보기';
       case 1:
-        return Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'Today is  ',
-                style: const TextStyle(fontSize: 14.0, color: Colors.black),
-              ),
-              TextSpan(
-                text: DateFormat('yyyy.MM.dd').format(DateTime.now()),
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        );
+        return DateFormat('yyyy.MM.dd').format(DateTime.now());
       case 2:
-        return const Text('리스트 편집');
+        return '리스트 편집';
       case 3:
-        return const Text('로그');
+        return '로그';
       default:
-        return const Text('');
+        return '';
     }
   }
 
@@ -77,15 +64,22 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _getAppBarTitle(),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10.0), // 텍스트를 아래로 내림
+          child: Text(
+            _getAppBarTitle(),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 24, color: whiteColor),
+          ),
+        ),
         backgroundColor: mainColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings), 
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
+                  context,
+                  MaterialPageRoute(
                   builder: (context) => const SettingsScreen(),
                 ),
               );
@@ -112,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications_none),
-            label: '로그',
+            label: "로그",
           ),
         ],
         currentIndex: _selectedIndex,
@@ -125,4 +119,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
