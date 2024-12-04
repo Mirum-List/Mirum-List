@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:mirum_list/const/colors.dart';
+import 'package:mirum_list/listView/modify_list_screen.dart';
 
-// import 'package:mirum_list/listView/modify_list_screen.dart';
 class ListViewScreen extends StatefulWidget {
   @override
   _ListViewScreenState createState() => _ListViewScreenState();
@@ -119,6 +119,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 color: mainColor2,
                 borderRadius: BorderRadius.circular(100),
               ),
+              padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: _searchController, // 컨트롤러 연결
                 decoration: const InputDecoration(
@@ -142,7 +143,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  color: ligthGreyColor,
+                  color: mainColor2,
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('tasks')
@@ -274,18 +275,18 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               icon: const Icon(Icons.edit,
                                                   color: whiteColor),
                                               onPressed: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) =>
-                                                //         ModifyListScreen(
-                                                //             taskId: task.id,
-                                                //             taskData: task
-                                                //                     .data()
-                                                //                 as Map<String,
-                                                //                     dynamic>),
-                                                //   ),
-                                                // );
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ModifyListScreen(
+                                                            taskId: task.id,
+                                                            taskData: task
+                                                                    .data()
+                                                                as Map<String,
+                                                                    dynamic>),
+                                                  ),
+                                                );
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
@@ -319,11 +320,18 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            task['title'], // 할 일 제목
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                          Container(
+                                            width: 170,
+                                            child: Text(
+                                              task['title'], // 할 일 제목
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+
+                                              maxLines: 1, // 한 줄로 제한
+                                              overflow: TextOverflow
+                                                  .ellipsis, // 글자 수 제한
                                             ),
                                           ),
                                           Column(
@@ -361,12 +369,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               ),
                                               const SizedBox(height: 10),
                                               Container(
+                                                width: 130,
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 10,
                                                         vertical: 5),
                                                 decoration: BoxDecoration(
-                                                  color: ligthGreyColor,
+                                                  color: mainColor2,
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
