@@ -20,6 +20,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // Firestore에서 가져온 할 일 목록
   Map<DateTime, List<Map<String, dynamic>>> _events = {};
 
+  final Map<String, Color> _categoryColors = {
+
+    'Work': Colors.blue,
+    'Study': Colors.green,
+    'Exercise': Colors.orange,
+    'Relax': Colors.purple,
+    'Other': Colors.grey,
+  };
+
   // Firestore 데이터 로드
   void _loadEventsFromFirestore() async {
     final snapshot = await FirebaseFirestore.instance
