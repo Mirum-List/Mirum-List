@@ -1,3 +1,5 @@
+// lib/listView/list_view_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -12,11 +14,11 @@ class ListViewScreen extends StatefulWidget {
 class _ListViewScreenState extends State<ListViewScreen> {
   String selectedButton = 'deadline'; // 현재 선택된 버튼을 저장
 
-  // 검색바 컴트롤러 + 변수
+  // 검색바 컨트롤러 + 변수
   TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-// 남은 시간을 계산하는 함수
+  // 남은 시간을 계산하는 함수
   String calculateRemainingTime(DateTime deadline) {
     final now = DateTime.now();
     final difference = deadline.difference(now);
@@ -53,10 +55,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
       body: Column(
         children: [
           const SizedBox(height: 10),
+          // 정렬 버튼들
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // 마감 기한 버튼
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -73,6 +77,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 child: const Text('마감 기한', style: TextStyle(color: whiteColor)),
               ),
               const SizedBox(width: 10),
+              // 중요도 버튼
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -87,9 +92,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                 ),
-                child: const Text('중요도', style: TextStyle(color: Colors.white)),
+                child: const Text('중요도', style: TextStyle(color: whiteColor)),
               ),
               const SizedBox(width: 10),
+              // 추천 순위 버튼
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -104,12 +110,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                 ),
-                child:
-                    const Text('추천 순위', style: TextStyle(color: Colors.white)),
+                child: const Text('추천 순위', style: TextStyle(color: whiteColor)),
               ),
             ],
           ),
-          //검색 바 추가
+          // 검색 바 추가
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -128,18 +133,17 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   border: InputBorder.none,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  suffixIcon:
-                      Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
+                  suffixIcon: Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
                 ),
                 style: const TextStyle(color: blackColor),
               ),
             ),
           ),
-
+          // 작업 리스트
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 10, left: 20, right: 20, bottom: 20),
+              padding:
+                  const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -148,24 +152,22 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     stream: FirebaseFirestore.instance
                         .collection('tasks')
                         .where('completed', isEqualTo: false)
-                        .orderBy(
-                            selectedButton == 'importance'
-                                ? 'importance'
-                                : 'deadline',
-                            descending: selectedButton == 'importance')
-                        .orderBy(
-                            selectedButton == 'importance'
-                                ? 'deadline'
-                                : 'importance',
-                            descending: selectedButton == 'deadline')
                         .snapshots(),
                     builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('오류 발생: ${snapshot.error}'),
+                        );
+                      }
                       if (!snapshot.hasData) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
+                      // 데이터를 리스트로 변환
+                      List<DocumentSnapshot> tasks = snapshot.data!.docs;
+
                       // 검색어에 따라 필터링된 리스트 생성
-                      final tasks = snapshot.data!.docs.where((doc) {
+                      tasks = tasks.where((doc) {
                         if (_searchQuery.isEmpty) {
                           return true;
                         } else {
@@ -173,6 +175,34 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           return title.contains(_searchQuery);
                         }
                       }).toList();
+
+                      // 선택된 버튼에 따라 정렬
+                      if (selectedButton == 'deadline') {
+                        tasks.sort((a, b) {
+                          DateTime aDeadline =
+                              (a['deadline'] as Timestamp).toDate();
+                          DateTime bDeadline =
+                              (b['deadline'] as Timestamp).toDate();
+                          return aDeadline.compareTo(bDeadline);
+                        });
+                      } else if (selectedButton == 'importance') {
+                        tasks.sort((a, b) {
+                          int aImportance = a['importance'] ?? 0;
+                          int bImportance = b['importance'] ?? 0;
+                          return bImportance.compareTo(aImportance);
+                        });
+                      } else if (selectedButton == 'recommendation') {
+                        tasks.sort((a, b) {
+                          // 추천 순위 정렬 (예: createdAt 기준)
+                          DateTime aCreatedAt =
+                              (a['createdAt'] as Timestamp?)?.toDate() ??
+                                  DateTime.now();
+                          DateTime bCreatedAt =
+                              (b['createdAt'] as Timestamp?)?.toDate() ??
+                                  DateTime.now();
+                          return bCreatedAt.compareTo(aCreatedAt);
+                        });
+                      }
 
                       return ListView.builder(
                         itemCount: tasks.length,
@@ -196,6 +226,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // 상단 바
                                   Container(
                                     height: 32,
                                     decoration: BoxDecoration(
@@ -221,6 +252,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+                                        // 마감 기한 날짜 표시
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10),
@@ -234,12 +266,12 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                           ),
                                         ),
                                         const SizedBox(width: 10),
+                                        // 중요도 표시
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: List.generate(
-                                            task[
-                                                'importance'], // 중요도 값에 따라 동그라미 생성
+                                            task['importance'],
                                             (index) => const Padding(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 2),
@@ -252,6 +284,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                           ),
                                         ),
                                         const SizedBox(width: 10),
+                                        // 액션 아이콘들
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -263,13 +296,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                 FirebaseFirestore.instance
                                                     .collection('tasks')
                                                     .doc(task.id)
-                                                    .update(
-                                                        {'completed': true});
+                                                    .update({'completed': true});
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints:
-                                                  const BoxConstraints(), // 기본 제약 조건 제거
+                                              constraints: const BoxConstraints(),
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.edit,
@@ -281,8 +312,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                     builder: (context) =>
                                                         ModifyListScreen(
                                                             taskId: task.id,
-                                                            taskData: task
-                                                                    .data()
+                                                            taskData: task.data()
                                                                 as Map<String,
                                                                     dynamic>),
                                                   ),
@@ -290,8 +320,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints:
-                                                  const BoxConstraints(), // 기본 제약 조건 제거
+                                              constraints: const BoxConstraints(),
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete,
@@ -304,14 +333,14 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints:
-                                                  const BoxConstraints(), // 기본 제약 조건 제거
+                                              constraints: const BoxConstraints(),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
+                                  // 할 일 내용
                                   Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -320,6 +349,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
+                                          // 할 일 제목
                                           Container(
                                             width: 170,
                                             child: Text(
@@ -328,34 +358,24 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                               ),
-
                                               maxLines: 1, // 한 줄로 제한
-                                              overflow: TextOverflow
-                                                  .ellipsis, // 글자 수 제한
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
+                                          // 카테고리 및 남은 시간
                                           Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
                                             children: [
+                                              // 카테고리 표시
                                               Container(
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 10,
                                                         vertical: 5),
                                                 decoration: BoxDecoration(
-                                                  color: task['category'] ==
-                                                          '음악'
-                                                      ? normalBlueColor
-                                                      : task['category'] == '운동'
-                                                          ? lightpurple
-                                                          : task['category'] ==
-                                                                  '일상'
-                                                              ? moreDeepBlueColor
-                                                              : task['category'] ==
-                                                                      '공부'
-                                                                  ? lightorange
-                                                                  : lightBlueColor, // 기본 색상 (기타)
+                                                  color: _getCategoryColor(
+                                                      task['category']),
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
@@ -368,6 +388,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
+                                              // 남은 시간 표시
                                               Container(
                                                 width: 130,
                                                 padding:
@@ -420,5 +441,21 @@ class _ListViewScreenState extends State<ListViewScreen> {
         ],
       ),
     );
+  }
+
+  // 카테고리 색상 매핑 함수
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case '음악':
+        return normalBlueColor;
+      case '운동':
+        return lightpurple;
+      case '일상':
+        return moreDeepBlueColor;
+      case '공부':
+        return lightorange;
+      default:
+        return lightBlueColor; // 기본 색상 (기타)
+    }
   }
 }
