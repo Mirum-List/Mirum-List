@@ -19,16 +19,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
   String _searchQuery = '';
 
   // 남은 시간을 계산하는 함수
-  String calculateRemainingTime(DateTime deadline, DocumentSnapshot task) {
+  String calculateRemainingTime(DateTime deadline) {
     final now = DateTime.now();
     final difference = deadline.difference(now);
 
     if (difference.isNegative) {
-      FirebaseFirestore.instance
-          .collection('tasks')
-          .doc(task.id)
-          .update({'completed': true});
-
       return "기한 초과";
     }
 
@@ -142,7 +137,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
                       EdgeInsets.symmetric(horizontal: 16.0),
                   suffixIcon: Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
                 ),
-                style: const TextStyle(color: blackColor, fontSize: 16, height: 1.4,),
+                style: const TextStyle(
+                  color: blackColor,
+                  fontSize: 16,
+                  height: 1.4,
+                ),
               ),
             ),
           ),
@@ -158,7 +157,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('tasks')
-                        .where('completed', isEqualTo: false)
+                        .where('completed', isEqualTo: false) // 'completed'가 false인 문서만 가져오기
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
@@ -179,8 +178,15 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           return true;
                         } else {
                           String title = doc['title'] ?? '';
-                          return title.contains(_searchQuery);
+                          return title.toLowerCase().contains(_searchQuery.toLowerCase());
                         }
+                      }).toList();
+
+                      // 마감기한이 아직 남아있는 할 일만 필터링
+                      final now = DateTime.now();
+                      tasks = tasks.where((doc) {
+                        DateTime deadline = (doc['deadline'] as Timestamp).toDate();
+                        return deadline.isAfter(now);
                       }).toList();
 
                       // 선택된 버튼에 따라 정렬
@@ -221,7 +227,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                             aScore = 1;
                           }
 
-                          aScore += a['importance'] as int;
+                          aScore += (a['importance'] as int? ?? 0);
 
                           DateTime bDeadline =
                               (b['deadline'] as Timestamp).toDate();
@@ -242,7 +248,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                             bScore = 1;
                           }
 
-                          bScore += (b['importance'] ?? 0) as int;
+                          bScore += (b['importance'] as int? ?? 0);
 
                           // First compare the scores
                           int scoreComparison = bScore.compareTo(aScore);
@@ -265,7 +271,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           final DateTime deadline =
                               (task['deadline'] as Timestamp).toDate();
                           final String remainingTime =
-                              calculateRemainingTime(deadline, task);
+                              calculateRemainingTime(deadline);
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 30),
@@ -289,11 +295,11 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                             deadline.difference(now);
 
                                         if (difference.inDays < 1) {
-                                          return lightRed; // 1일 이내 빨간색
+                                          return lightRedColor; // 1일 이내 빨간색
                                         } else if (difference.inDays <= 7) {
-                                          return lightYellow; // 1주일 이내 노란색
+                                          return lightYellowColor; // 1주일 이내 노란색
                                         } else {
-                                          return lightgreen; // 그 외 초록색
+                                          return lightgreenColor; // 그 외 초록색
                                         }
                                       }(),
                                       borderRadius: const BorderRadius.only(
@@ -462,21 +468,19 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                   textAlign: TextAlign.center,
                                                   remainingTime, // 남은 시간 표시
                                                   style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: () {
-                                                        final now =
-                                                            DateTime.now();
-                                                        final difference =
-                                                            deadline.difference(
-                                                                now);
+                                                    fontSize: 14,
+                                                    color: () {
+                                                      final now = DateTime.now();
+                                                      final difference =
+                                                          deadline.difference(now);
 
-                                                        if (difference.inDays <
-                                                            1) {
-                                                          return normalRedColor; // 1일 이내 빨간색
-                                                        } else {
-                                                          return blackColor;
-                                                        }
-                                                      }()),
+                                                      if (difference.inDays < 1) {
+                                                        return normalRedColor; // 1일 이내 빨간색
+                                                      } else {
+                                                        return blackColor;
+                                                      }
+                                                    }(),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -508,7 +512,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
       case '운동':
         return ligthGreyColor;
       case '공부':
-        return lightorange;
+        return lightorangeColor;
       case '음악':
         return pinkColor;
       case '일상':
