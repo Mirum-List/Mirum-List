@@ -459,6 +459,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                       BorderRadius.circular(20),
                                                 ),
                                                 child: Text(
+                                                  textAlign: TextAlign.center,
                                                   remainingTime, // 남은 시간 표시
                                                   style: TextStyle(
                                                       fontSize: 14,
