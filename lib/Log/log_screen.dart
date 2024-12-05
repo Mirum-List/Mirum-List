@@ -160,11 +160,11 @@ class _LogScreenState extends State<LogScreen> {
                                         children: [
                                           // 할 일 제목
                                           SizedBox(
-                                            width: 60,
+                                            width: 120,
                                             child: Text(
                                               task['title'], // 할 일 제목
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                                 decoration: completed
                                                     ? TextDecoration.lineThrough
