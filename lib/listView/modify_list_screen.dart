@@ -249,7 +249,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
       appBar: AppBar(
           title: const Text(
             '리스트 수정',
-            style: const TextStyle(
+            style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 24, color: whiteColor),
           ),
           backgroundColor: mainColor),
@@ -262,7 +262,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: mainColor2,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: TextField(
                 controller: _titleController,
@@ -276,8 +276,8 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+                color: mainColor2,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +297,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: whiteColor,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
                                 children: [
@@ -321,7 +321,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: whiteColor,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
                                 children: [
@@ -372,7 +372,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
                   backgroundColor: mainColor,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: const Text(

@@ -122,7 +122,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
               height: 40,
               decoration: BoxDecoration(
                 color: mainColor2,
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.all(0),
               child: TextField(

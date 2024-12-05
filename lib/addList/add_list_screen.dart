@@ -1,5 +1,3 @@
-// lib/editList/edit_list_screen.dart
-
 import 'package:flutter/material.dart';
 import '../const/colors.dart';
 import 'package:intl/intl.dart'; // 날짜 형식 처리를 위한 패키지
@@ -23,7 +21,7 @@ class _EditListScreenState extends State<EditListScreen> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   int _selectedImportance = 1;
   String _selectedCategory = '일상';
-  List<String> _categories = ['일상', '음악', '운동', '공부'];
+  final List<String> _categories = ['일상', '음악', '운동', '공부'];
 
   // Firestore 인스턴스
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -203,15 +201,6 @@ class _EditListScreenState extends State<EditListScreen> {
       return;
     }
 
-    // 현재 사용자 가져오기 (옵션: 사용자 인증을 사용하는 경우)
-    // User? user = FirebaseAuth.instance.currentUser;
-    // if (user == null) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('사용자가 인증되지 않았습니다.')),
-    //   );
-    //   return;
-    // }
-
     // 마감기한과 시간을 합쳐서 하나의 DateTime 객체 생성
     DateTime deadlineDateTime = DateTime(
       _selectedDate.year,
@@ -300,7 +289,7 @@ class _EditListScreenState extends State<EditListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: whiteColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -309,8 +298,8 @@ class _EditListScreenState extends State<EditListScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+                color: mainColor2,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: TextField(
                 controller: _titleController,
@@ -325,8 +314,8 @@ class _EditListScreenState extends State<EditListScreen> {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+                color: mainColor2,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,7 +341,7 @@ class _EditListScreenState extends State<EditListScreen> {
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
                                 children: [
@@ -378,8 +367,8 @@ class _EditListScreenState extends State<EditListScreen> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
                                 children: [
@@ -439,7 +428,7 @@ class _EditListScreenState extends State<EditListScreen> {
                   backgroundColor: mainColor,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 child: const Text(
