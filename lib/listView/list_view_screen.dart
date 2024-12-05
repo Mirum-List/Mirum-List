@@ -124,18 +124,20 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 color: mainColor2,
                 borderRadius: BorderRadius.circular(100),
               ),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(0),
               child: TextField(
+                textAlignVertical: TextAlignVertical.center,
                 controller: _searchController, // 컨트롤러 연결
                 decoration: const InputDecoration(
+                  isDense: true,
                   hintText: '검색',
                   hintStyle: TextStyle(color: blackColor),
                   border: InputBorder.none,
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      EdgeInsets.symmetric(horizontal: 16.0),
                   suffixIcon: Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
                 ),
-                style: const TextStyle(color: blackColor),
+                style: const TextStyle(color: blackColor, fontSize: 16, height: 1.4,),
               ),
             ),
           ),
