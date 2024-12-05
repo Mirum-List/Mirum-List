@@ -192,9 +192,9 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
   Color _getCategoryColor(String category) {
     switch (category) {
       case '운동':
-        return lightpurple;
+        return lightpurpleColor;
       case '공부':
-        return lightorange;
+        return lightorangeColor;
       case '음악':
         return normalBlueColor;
       case '일상':

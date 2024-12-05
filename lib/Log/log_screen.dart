@@ -28,7 +28,7 @@ class _LogScreenState extends State<LogScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  color: Colors.grey[200],
+                  color: mainColor2,
                   child: StreamBuilder<QuerySnapshot>(
                     stream: tasksQuery.snapshots(),
                     builder: (context, snapshot) {
@@ -61,7 +61,7 @@ class _LogScreenState extends State<LogScreen> {
                       }).toList();
 
                       if (tasks.isEmpty) {
-                        return Center(
+                        return const Center(
                           child: Text('작업이 없습니다.'),
                         );
                       }
@@ -83,16 +83,15 @@ class _LogScreenState extends State<LogScreen> {
                               (task['deadline'] as Timestamp).toDate();
                           final bool completed = task['completed'] ?? false;
                           final Color topBarColor =
-                              completed ? Colors.grey : Colors.red[200]!;
+                              completed ? greyColor : lightRedColor;
                           final String statusText = completed ? '완료' : '미완료';
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 30),
                             child: Container(
-                              width: 330,
                               height: 130,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: whiteColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
@@ -120,7 +119,7 @@ class _LogScreenState extends State<LogScreen> {
                                             DateFormat('yyyy.MM.dd')
                                                 .format(deadline),
                                             style: const TextStyle(
-                                              color: Colors.white,
+                                              color: whiteColor,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -139,29 +138,8 @@ class _LogScreenState extends State<LogScreen> {
                                                     Icons.circle,
                                                     size: 8,
                                                     color:
-                                                        Colors.white, // 하얀 동그라미
+                                                        whiteColor, // 하얀 동그라미
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5),
-                                            // 카테고리 표시 - 오른쪽 끝에 위치
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5),
-                                              decoration: BoxDecoration(
-                                                color: _getCategoryColor(
-                                                    task['category']),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Text(
-                                                task['category'], // 카테고리
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white,
                                                 ),
                                               ),
                                             ),
@@ -181,7 +159,8 @@ class _LogScreenState extends State<LogScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           // 할 일 제목
-                                          Expanded(
+                                          SizedBox(
+                                            width: 60,
                                             child: Text(
                                               task['title'], // 할 일 제목
                                               style: TextStyle(
@@ -196,25 +175,56 @@ class _LogScreenState extends State<LogScreen> {
                                                   .ellipsis, // 글자 수 제한
                                             ),
                                           ),
-                                          // 완료 상태 표시 - 크기 증가
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Text(
-                                              statusText,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: completed
-                                                    ? Colors.green
-                                                    : Colors.red,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              // 카테고리 표시
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: _getCategoryColor(
+                                                      task['category']),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Text(
+                                                  task['category'], // 카테고리
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: whiteColor,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 10),
+                                              // 남은 시간 표시
+                                              Container(
+                                                width: 70,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  color: mainColor2,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Text(
+                                                  statusText,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: completed
+                                                        ? greenColor
+                                                        : normalRedColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -243,7 +253,7 @@ class _LogScreenState extends State<LogScreen> {
       case '운동':
         return ligthGreyColor;
       case '공부':
-        return lightorange;
+        return lightorangeColor;
       case '음악':
         return pinkColor;
       case '일상':

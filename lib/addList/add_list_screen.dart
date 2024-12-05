@@ -183,7 +183,7 @@ class _EditListScreenState extends State<EditListScreen> {
       case '운동':
         return ligthGreyColor;
       case '공부':
-        return lightorange;
+        return lightorangeColor;
       case '음악':
         return pinkColor;
       case '일상':
