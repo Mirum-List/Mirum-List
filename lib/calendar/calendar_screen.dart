@@ -20,13 +20,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // Firestore에서 가져온 할 일 목록
   Map<DateTime, List<Map<String, dynamic>>> _events = {};
 
-  final Map<String, Color> _categoryColors = {
-    '운동': ligthGreyColor,
-    '공부': lightorange,
-    '음악': pinkColor,
-    '일상': brownColor,
-    'Other': beigeColor,
-  };
+  // 카테고리 색상 정의
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case '운동':
+        return ligthGreyColor;
+      case '공부':
+        return lightorange;
+      case '음악':
+        return pinkColor;
+      case '일상':
+        return brownColor;
+      default:
+        return beigeColor;
+    }
+  }
 
   // Firestore 데이터 로드
   void _loadEventsFromFirestore() async {
@@ -42,7 +50,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       // 날짜별로 할 일 분류
       final eventDate =
-          DateTime.utc(deadline.year, deadline.month, deadline.day);
+      DateTime.utc(deadline.year, deadline.month, deadline.day);
 
       if (!loadedEvents.containsKey(eventDate)) {
         loadedEvents[eventDate] = [];
@@ -134,16 +142,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         children: [
                           const SizedBox(height: 37),
                           for (var i = 0;
-                              i < (dayEvents.length > 2 ? 2 : dayEvents.length);
-                              i++)
+                          i < (dayEvents.length > 2 ? 2 : dayEvents.length);
+                          i++)
                             Container(
                               width: 30,
                               height: 1.5,
                               margin: const EdgeInsets.symmetric(vertical: 0.5),
                               decoration: BoxDecoration(
                                 color:
-                                    _categoryColors[dayEvents[i]['category']] ??
-                                        Colors.grey, // 카테고리별 색상
+                                _getCategoryColor(dayEvents[i]['category']), // 카테고리별 색상
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -173,8 +180,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       itemBuilder: (context, index) {
                         final event = selectedEvents[index]; // 할 일
                         final categoryColor =
-                            _categoryColors[event['category']] ??
-                                Colors.grey; // 카테고리 색상
+                        _getCategoryColor(event['category']); // 카테고리 색상
 
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -211,13 +217,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               Row(
                                 children: List.generate(event['priority'],
-                                    (dotIndex) {
-                                  return Icon(
-                                    Icons.circle,
-                                    size: 13,
-                                    color: Colors.white,
-                                  );
-                                }),
+                                        (dotIndex) {
+                                      return Icon(
+                                        Icons.circle,
+                                        size: 13,
+                                        color: Colors.white,
+                                      );
+                                    }),
                               ),
                             ],
                           ),
