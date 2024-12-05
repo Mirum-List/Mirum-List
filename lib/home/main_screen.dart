@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mirum_list/Log/log_screen.dart';
 import 'package:mirum_list/calendar/calendar_screen.dart';
 import 'package:mirum_list/const/colors.dart';
-import 'package:mirum_list/editList/edit_list_screen.dart';
+import 'package:mirum_list/addList/add_list_screen.dart';
 import 'package:mirum_list/listView/list_view_screen.dart';
 import 'package:mirum_list/settings/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getCurrentPage() {
     switch (_selectedIndex) {
       case 0:
-        return  ListViewScreen();
+        return ListViewScreen();
       case 1:
         return const CalendarScreen();
       case 2:
@@ -42,26 +42,32 @@ class _MainScreenState extends State<MainScreen> {
   Widget _getAppBarTitle() {
     switch (_selectedIndex) {
       case 0:
-        return const Text('리스트 보기');
+        return const Text('리스트 보기',
+            style: TextStyle(fontWeight: FontWeight.bold));
       case 1:
         return Text.rich(
           TextSpan(
             children: [
-              TextSpan(
+              const TextSpan(
                 text: 'Today is  ',
-                style: const TextStyle(fontSize: 14.0, color: Colors.black),
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: whiteColor,
+                    fontWeight: FontWeight.bold),
               ),
               TextSpan(
                 text: DateFormat('yyyy.MM.dd').format(DateTime.now()),
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         );
       case 2:
-        return Text('할 일 편집');
+        return const Text('리스트 추가',
+            style: TextStyle(fontWeight: FontWeight.bold));
       case 3:
-        return const Text('로그');
+        return const Text('로그', style: TextStyle(fontWeight: FontWeight.bold));
       default:
         return const Text('');
     }
@@ -76,10 +82,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: _getAppBarTitle(),
+        foregroundColor: whiteColor,
         backgroundColor: mainColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings), 
+            icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
                 context,
@@ -104,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.calendar_month),
             label: '캘린더',
           ),
-          BottomNavigationBarItem(  
+          BottomNavigationBarItem(
             icon: Icon(Icons.edit),
             label: '편집',
           ),

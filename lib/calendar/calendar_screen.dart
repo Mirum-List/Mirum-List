@@ -21,13 +21,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Map<DateTime, List<Map<String, dynamic>>> _events = {};
 
   final Map<String, Color> _categoryColors = {
-
-    '운동': lightpurple,
+    '운동': ligthGreyColor,
     '공부': lightorange,
-    '음악': normalBlueColor,
-    '일상': moreDeepBlueColor,
-    'Other': lightBlueColor,
-
+    '음악': pinkColor,
+    '일상': brownColor,
+    'Other': beigeColor,
   };
 
   // Firestore 데이터 로드
@@ -43,7 +41,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final deadline = (data['deadline'] as Timestamp).toDate();
 
       // 날짜별로 할 일 분류
-      final eventDate = DateTime.utc(deadline.year, deadline.month, deadline.day);
+      final eventDate =
+          DateTime.utc(deadline.year, deadline.month, deadline.day);
 
       if (!loadedEvents.containsKey(eventDate)) {
         loadedEvents[eventDate] = [];
@@ -104,7 +103,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   firstDay: DateTime.utc(1900, 1, 1),
                   lastDay: DateTime.utc(2040, 12, 31),
                   focusedDay: _focusedDay, // 현재 포커스된 날짜
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day), // 선택된 날짜 확인
+                  selectedDayPredicate: (day) =>
+                      isSameDay(_selectedDay, day), // 선택된 날짜 확인
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
                       _selectedDay = selectedDay; // 선택된 날짜
@@ -116,15 +116,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     todayDecoration: BoxDecoration(
                       color: deepBlueColor, // 오늘 날짜 표시
                       shape: BoxShape.circle,
-
                     ),
-
                     selectedDecoration: BoxDecoration(
                       color: moreDeepBlueColor, // 선택된 날짜 표시
                       shape: BoxShape.circle,
                     ),
                     cellMargin: EdgeInsets.all(15),
-
                   ),
                   // 날짜별 할 일 갯수 표시
                   calendarBuilders: CalendarBuilders(
@@ -136,13 +133,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return Column(
                         children: [
                           const SizedBox(height: 37),
-                          for (var i = 0; i < (dayEvents.length > 2 ? 2 : dayEvents.length); i++)
+                          for (var i = 0;
+                              i < (dayEvents.length > 2 ? 2 : dayEvents.length);
+                              i++)
                             Container(
                               width: 30,
                               height: 1.5,
                               margin: const EdgeInsets.symmetric(vertical: 0.5),
                               decoration: BoxDecoration(
-                                color: _categoryColors[dayEvents[i]['category']] ?? Colors.grey, // 카테고리별 색상
+                                color:
+                                    _categoryColors[dayEvents[i]['category']] ??
+                                        Colors.grey, // 카테고리별 색상
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -172,19 +173,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       itemBuilder: (context, index) {
                         final event = selectedEvents[index]; // 할 일
                         final categoryColor =
-                            _categoryColors[event['category']] ?? Colors.grey; // 카테고리 색상
+                            _categoryColors[event['category']] ??
+                                Colors.grey; // 카테고리 색상
 
                         return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
-                            color: categoryColor.withOpacity(0.2), // 카테고리 색상을 적용한 배경
+                            color: categoryColor
+                                .withOpacity(0.2), // 카테고리 색상을 적용한 배경
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4.0, horizontal: 8.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white, // 카테고리 배경
                                   borderRadius: BorderRadius.circular(8.0),
@@ -205,7 +210,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 ),
                               ),
                               Row(
-                                children: List.generate(event['priority'], (dotIndex) {
+                                children: List.generate(event['priority'],
+                                    (dotIndex) {
                                   return Icon(
                                     Icons.circle,
                                     size: 13,

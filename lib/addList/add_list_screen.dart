@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../const/colors.dart';
 import 'package:intl/intl.dart'; // 날짜 형식 처리를 위한 패키지
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore 패키지 추가
-import '../model/task.dart'; // Task 모델 임포트
 
 class EditListScreen extends StatefulWidget {
   const EditListScreen({super.key});
@@ -16,7 +15,8 @@ class EditListScreen extends StatefulWidget {
 class _EditListScreenState extends State<EditListScreen> {
   // 컨트롤러
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _customCategoryController = TextEditingController();
+  final TextEditingController _customCategoryController =
+      TextEditingController();
 
   // 상태 변수
   DateTime _selectedDate = DateTime.now();
@@ -74,7 +74,7 @@ class _EditListScreenState extends State<EditListScreen> {
             });
           },
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.0),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0),
             width: 24,
             height: 24,
             decoration: BoxDecoration(
@@ -83,7 +83,7 @@ class _EditListScreenState extends State<EditListScreen> {
               border: Border.all(color: normalRedColor),
             ),
             child: i <= _selectedImportance
-                ? Icon(
+                ? const Icon(
                     Icons.check,
                     size: 16,
                     color: normalRedColor,
@@ -119,7 +119,8 @@ class _EditListScreenState extends State<EditListScreen> {
                 },
                 child: Container(
                   width: buttonWidth,
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12), // 패딩 증가
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 12), // 패딩 증가
                   decoration: BoxDecoration(
                     color: _selectedCategory == category
                         ? _getCategoryColor(category)
@@ -151,17 +152,18 @@ class _EditListScreenState extends State<EditListScreen> {
               },
               child: Container(
                 width: buttonWidth,
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12), // 패딩 증가
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 12), // 패딩 증가
                 decoration: BoxDecoration(
                   color: whiteColor,
-                  border: Border.all(color: mainColor),
+                  border: Border.all(color: beigeColor),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     '+',
                     style: TextStyle(
-                      color: mainColor,
+                      color: beigeColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -179,15 +181,15 @@ class _EditListScreenState extends State<EditListScreen> {
   Color _getCategoryColor(String category) {
     switch (category) {
       case '운동':
-        return lightpurple;
+        return ligthGreyColor;
       case '공부':
         return lightorange;
       case '음악':
-        return normalBlueColor;
+        return pinkColor;
       case '일상':
-        return moreDeepBlueColor;
+        return brownColor;
       default:
-        return lightBlueColor;
+        return beigeColor;
     }
   }
 
@@ -196,7 +198,7 @@ class _EditListScreenState extends State<EditListScreen> {
     String title = _titleController.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('제목을 입력해주세요.')),
+        const SnackBar(content: Text('제목을 입력해주세요.')),
       );
       return;
     }
@@ -233,7 +235,7 @@ class _EditListScreenState extends State<EditListScreen> {
     try {
       await _firestore.collection('tasks').add(taskData);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('할 일이 추가되었습니다!')),
+        const SnackBar(content: Text('할 일이 추가되었습니다!')),
       );
 
       // 필드 초기화
@@ -247,7 +249,7 @@ class _EditListScreenState extends State<EditListScreen> {
     } catch (e) {
       print('Error adding task: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('할 일 추가에 실패했습니다. 다시 시도해주세요.')),
+        const SnackBar(content: Text('할 일 추가에 실패했습니다. 다시 시도해주세요.')),
       );
     }
   }
@@ -258,10 +260,10 @@ class _EditListScreenState extends State<EditListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('카테고리 추가'),
+          title: const Text('카테고리 추가'),
           content: TextField(
             controller: _customCategoryController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: '새 카테고리를 입력하세요',
             ),
           ),
@@ -271,12 +273,13 @@ class _EditListScreenState extends State<EditListScreen> {
                 _customCategoryController.clear();
                 Navigator.of(context).pop();
               },
-              child: Text('취소'),
+              child: const Text('취소'),
             ),
             TextButton(
               onPressed: () {
                 String newCategory = _customCategoryController.text.trim();
-                if (newCategory.isNotEmpty && !_categories.contains(newCategory)) {
+                if (newCategory.isNotEmpty &&
+                    !_categories.contains(newCategory)) {
                   setState(() {
                     _categories.add(newCategory);
                     _selectedCategory = newCategory;
@@ -285,7 +288,7 @@ class _EditListScreenState extends State<EditListScreen> {
                 _customCategoryController.clear();
                 Navigator.of(context).pop();
               },
-              child: Text('추가'),
+              child: const Text('추가'),
             ),
           ],
         );
@@ -299,28 +302,28 @@ class _EditListScreenState extends State<EditListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // 제목 입력 필드
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
                 controller: _titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '제목',
                   border: InputBorder.none,
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             // 마감기한, 중요도, 카테고리 박스
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
@@ -332,7 +335,7 @@ class _EditListScreenState extends State<EditListScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         '마감기한',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -345,20 +348,21 @@ class _EditListScreenState extends State<EditListScreen> {
                           GestureDetector(
                             onTap: _pickDate,
                             child: Container(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.calendar_today,
+                                  const Icon(Icons.calendar_today,
                                       size: 16.0, color: mainColor),
-                                  SizedBox(width: 4.0),
+                                  const SizedBox(width: 4.0),
                                   Text(
-                                    DateFormat('yyyy-MM-dd').format(_selectedDate),
-                                    style: TextStyle(
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(_selectedDate),
+                                    style: const TextStyle(
                                       color: mainColor,
                                     ),
                                   ),
@@ -366,25 +370,25 @@ class _EditListScreenState extends State<EditListScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8.0),
+                          const SizedBox(width: 8.0),
                           // 시간 선택
                           GestureDetector(
                             onTap: _pickTime,
                             child: Container(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.access_time,
+                                  const Icon(Icons.access_time,
                                       size: 16.0, color: mainColor),
-                                  SizedBox(width: 4.0),
+                                  const SizedBox(width: 4.0),
                                   Text(
                                     _selectedTime.format(context),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: mainColor,
                                     ),
                                   ),
@@ -396,12 +400,12 @@ class _EditListScreenState extends State<EditListScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   // 중요도
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         '중요도',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -411,21 +415,21 @@ class _EditListScreenState extends State<EditListScreen> {
                       _buildImportanceSelector(),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   // 카테고리
-                  Text(
+                  const Text(
                     '카테고리',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   _buildCategoryButtons(),
                 ],
               ),
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             // 추가하기 버튼
             SizedBox(
               width: double.infinity,
@@ -433,12 +437,12 @@ class _EditListScreenState extends State<EditListScreen> {
                 onPressed: _addTask, // Firestore에 데이터 저장 함수 호출
                 style: ElevatedButton.styleFrom(
                   backgroundColor: mainColor,
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   '추가하기',
                   style: TextStyle(
                     fontSize: 16.0,
