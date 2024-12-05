@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:mirum_list/const/colors.dart';
 
 class LogScreen extends StatefulWidget {
   @override
@@ -22,8 +23,8 @@ class _LogScreenState extends State<LogScreen> {
           // 작업 리스트
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+              padding: const EdgeInsets.only(
+                  top: 10, left: 20, right: 20, bottom: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -129,7 +130,8 @@ class _LogScreenState extends State<LogScreen> {
                                           children: [
                                             Row(
                                               children: List.generate(
-                                                task['importance'], // 중요도 값에 따라 동그라미 생성
+                                                task[
+                                                    'importance'], // 중요도 값에 따라 동그라미 생성
                                                 (idx) => const Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 2),
@@ -239,15 +241,15 @@ class _LogScreenState extends State<LogScreen> {
   Color _getCategoryColor(String category) {
     switch (category) {
       case '운동':
-        return Colors.purple;
+        return ligthGreyColor;
       case '공부':
-        return Colors.orange;
+        return lightorange;
       case '음악':
-        return Colors.blue;
+        return pinkColor;
       case '일상':
-        return Colors.blue[700]!;
+        return brownColor;
       default:
-        return Colors.blue; // 기본 색상 (기타)
+        return beigeColor;
     }
   }
 }

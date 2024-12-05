@@ -19,11 +19,16 @@ class _ListViewScreenState extends State<ListViewScreen> {
   String _searchQuery = '';
 
   // 남은 시간을 계산하는 함수
-  String calculateRemainingTime(DateTime deadline) {
+  String calculateRemainingTime(DateTime deadline, DocumentSnapshot task) {
     final now = DateTime.now();
     final difference = deadline.difference(now);
 
     if (difference.isNegative) {
+      FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(task.id)
+          .update({'completed': true});
+
       return "기한 초과";
     }
 
@@ -133,7 +138,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                   border: InputBorder.none,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  suffixIcon: Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
+                  suffixIcon:
+                      Icon(Icons.search, color: blackColor), // 검색 아이콘 추가
                 ),
                 style: const TextStyle(color: blackColor),
               ),
@@ -142,8 +148,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
           // 작업 리스트
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+              padding: const EdgeInsets.only(
+                  top: 10, left: 20, right: 20, bottom: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -193,14 +199,60 @@ class _ListViewScreenState extends State<ListViewScreen> {
                         });
                       } else if (selectedButton == 'recommendation') {
                         tasks.sort((a, b) {
-                          // 추천 순위 정렬 (예: createdAt 기준)
-                          DateTime aCreatedAt =
-                              (a['createdAt'] as Timestamp?)?.toDate() ??
-                                  DateTime.now();
-                          DateTime bCreatedAt =
-                              (b['createdAt'] as Timestamp?)?.toDate() ??
-                                  DateTime.now();
-                          return bCreatedAt.compareTo(aCreatedAt);
+                          DateTime now = DateTime.now();
+
+                          DateTime aDeadline =
+                              (a['deadline'] as Timestamp).toDate();
+                          int aScore = 0;
+                          final aDifference = aDeadline.difference(now).inDays;
+
+                          if (aDifference <= 1) {
+                            aScore = 10;
+                          } else if (aDifference <= 3) {
+                            aScore = 7;
+                          } else if (aDifference <= 7) {
+                            aScore = 5;
+                          } else if (aDifference <= 14) {
+                            aScore = 3;
+                          } else if (aDifference <= 30) {
+                            aScore = 2;
+                          } else {
+                            aScore = 1;
+                          }
+
+                          aScore += a['importance'] as int;
+
+                          DateTime bDeadline =
+                              (b['deadline'] as Timestamp).toDate();
+                          int bScore = 0;
+                          final bDifference = bDeadline.difference(now).inDays;
+
+                          if (bDifference <= 1) {
+                            bScore = 10;
+                          } else if (bDifference <= 3) {
+                            bScore = 7;
+                          } else if (bDifference <= 7) {
+                            bScore = 5;
+                          } else if (bDifference <= 14) {
+                            bScore = 3;
+                          } else if (bDifference <= 30) {
+                            bScore = 2;
+                          } else {
+                            bScore = 1;
+                          }
+
+                          bScore += (b['importance'] ?? 0) as int;
+
+                          // First compare the scores
+                          int scoreComparison = bScore.compareTo(aScore);
+                          if (scoreComparison != 0) {
+                            return scoreComparison;
+                          } else {
+                            // If scores are equal, compare titles in ascending order
+                            String aTitle = a['title'] ?? '';
+                            String bTitle = b['title'] ?? '';
+                            return aTitle.compareTo(bTitle);
+                          }
                         });
                       }
 
@@ -212,7 +264,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           final DateTime deadline =
                               (task['deadline'] as Timestamp).toDate();
                           final String remainingTime =
-                              calculateRemainingTime(deadline);
+                              calculateRemainingTime(deadline, task);
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 30),
@@ -296,11 +348,13 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                 FirebaseFirestore.instance
                                                     .collection('tasks')
                                                     .doc(task.id)
-                                                    .update({'completed': true});
+                                                    .update(
+                                                        {'completed': true});
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.edit,
@@ -312,7 +366,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                                     builder: (context) =>
                                                         ModifyListScreen(
                                                             taskId: task.id,
-                                                            taskData: task.data()
+                                                            taskData: task
+                                                                    .data()
                                                                 as Map<String,
                                                                     dynamic>),
                                                   ),
@@ -320,7 +375,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete,
@@ -333,7 +389,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                               },
                                               padding:
                                                   EdgeInsets.zero, // 내부 패딩 제거
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                             ),
                                           ],
                                         ),
@@ -446,16 +503,16 @@ class _ListViewScreenState extends State<ListViewScreen> {
   // 카테고리 색상 매핑 함수
   Color _getCategoryColor(String category) {
     switch (category) {
-      case '음악':
-        return normalBlueColor;
       case '운동':
-        return lightpurple;
-      case '일상':
-        return moreDeepBlueColor;
+        return ligthGreyColor;
       case '공부':
         return lightorange;
+      case '음악':
+        return pinkColor;
+      case '일상':
+        return brownColor;
       default:
-        return lightBlueColor; // 기본 색상 (기타)
+        return beigeColor;
     }
   }
 }
