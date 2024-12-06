@@ -94,15 +94,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(20.0),
             ),
             child: Column(
               children: [
