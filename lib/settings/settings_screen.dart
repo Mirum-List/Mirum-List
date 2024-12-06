@@ -126,10 +126,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
         title: const Text(
           '환경 설정',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: whiteColor),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 24, color: whiteColor),
         ),
         backgroundColor: normalBlueColor, // 헤더 색상
       ),
@@ -140,7 +142,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               color: mainColor2, // 테두리 내부 배경색
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,13 +160,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: deepmainColor, // 필드 배경 색상
-                    borderRadius: BorderRadius.circular(100), // 레디우스 100
+                    borderRadius: BorderRadius.circular(20), // 레디우스 100
                   ),
                   child: TextField(
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: FirebaseAuth.instance.currentUser?.email ?? "이메일 주소",
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      hintText:
+                          FirebaseAuth.instance.currentUser?.email ?? "이메일 주소",
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     enabled: false,
                   ),
@@ -189,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         backgroundColor: normalBlueColor,
                         minimumSize: const Size(60, 30), // 버튼 크기
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(
@@ -203,14 +207,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: deepmainColor,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
                     controller: _currentPasswordController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "현재 비밀번호",
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                     style: const TextStyle(fontSize: 16),
                     obscureText: true,
@@ -220,14 +225,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: deepmainColor,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
                     controller: _newPasswordController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "새 비밀번호",
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                     style: const TextStyle(fontSize: 16),
                     obscureText: true,
@@ -237,14 +243,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: deepmainColor,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
                     controller: _confirmPasswordController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "새 비밀번호 확인",
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                     style: const TextStyle(fontSize: 16),
                     obscureText: true,
@@ -284,14 +291,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: deepmainColor,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
                     controller: _phoneController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "휴대폰 번호",
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                     style: const TextStyle(fontSize: 16),
                     keyboardType: TextInputType.phone,
@@ -306,7 +314,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     backgroundColor: normalBlueColor,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   child: const Text(
@@ -323,7 +331,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     backgroundColor: normalRedColor,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   child: const Text(

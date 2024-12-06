@@ -26,7 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       case '운동':
         return ligthGreyColor;
       case '공부':
-        return lightorange;
+        return lightorangeColor;
       case '음악':
         return pinkColor;
       case '일상':
@@ -50,7 +50,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       // 날짜별로 할 일 분류
       final eventDate =
-      DateTime.utc(deadline.year, deadline.month, deadline.day);
+          DateTime.utc(deadline.year, deadline.month, deadline.day);
 
       if (!loadedEvents.containsKey(eventDate)) {
         loadedEvents[eventDate] = [];
@@ -134,15 +134,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         children: [
                           const SizedBox(height: 37),
                           for (var i = 0;
-                          i < (dayEvents.length > 2 ? 2 : dayEvents.length);
-                          i++)
+                              i < (dayEvents.length > 2 ? 2 : dayEvents.length);
+                              i++)
                             Container(
                               width: 30,
                               height: 1.5,
                               margin: const EdgeInsets.symmetric(vertical: 0.5),
                               decoration: BoxDecoration(
-                                color:
-                                _getCategoryColor(dayEvents[i]['category']), // 카테고리별 색상
+                                color: _getCategoryColor(
+                                    dayEvents[i]['category']), // 카테고리별 색상
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -172,7 +172,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       itemBuilder: (context, index) {
                         final event = selectedEvents[index]; // 할 일
                         final categoryColor =
-                        _getCategoryColor(event['category']); // 카테고리 색상
+                            _getCategoryColor(event['category']); // 카테고리 색상
 
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -209,13 +209,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               Row(
                                 children: List.generate(event['priority'],
-                                        (dotIndex) {
-                                      return Icon(
-                                        Icons.circle,
-                                        size: 13,
-                                        color: Colors.white,
-                                      );
-                                    }),
+                                    (dotIndex) {
+                                  return Icon(
+                                    Icons.circle,
+                                    size: 13,
+                                    color: Colors.white,
+                                  );
+                                }),
                               ),
                             ],
                           ),
