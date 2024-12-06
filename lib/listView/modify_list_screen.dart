@@ -46,7 +46,7 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
     String title = _titleController.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('제목을 입력해주세요.')),
+        const SnackBar(content: Text('제목을 입력해주세요.')),
       );
       return;
     }
@@ -68,21 +68,19 @@ class _ModifyListScreenState extends State<ModifyListScreen> {
     };
 
     try {
-      print('11111');
       await FirebaseFirestore.instance
           .collection('tasks')
           .doc(widget.taskId)
           .update(updatedTaskData);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('수정이 완료되었습니다!')),
+        const SnackBar(content: Text('수정이 완료되었습니다!')),
       );
-      print('2222');
 
       Navigator.pop(context); // 이전 화면으로 돌아가기
     } catch (e) {
       print('Error updating task: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('수정에 실패했습니다. 다시 시도해주세요.')),
+        const SnackBar(content: Text('수정에 실패했습니다. 다시 시도해주세요.')),
       );
     }
   }

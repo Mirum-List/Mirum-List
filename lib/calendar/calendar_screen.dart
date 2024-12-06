@@ -112,7 +112,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     });
                   },
                   eventLoader: _getEventsForDay, // 선택된 날짜의 할 일 목록
-                  calendarStyle: CalendarStyle(
+                  calendarStyle: const CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: deepBlueColor, // 오늘 날짜 표시
                       shape: BoxShape.circle,
@@ -158,7 +158,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     },
                   ),
-                  headerStyle: HeaderStyle(
+                  headerStyle: const HeaderStyle(
                     formatButtonVisible: false,
                     titleCentered: true,
                   ),
@@ -210,7 +210,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               Row(
                                 children: List.generate(event['priority'],
                                     (dotIndex) {
-                                  return Icon(
+                                  return const Icon(
                                     Icons.circle,
                                     size: 13,
                                     color: Colors.white,

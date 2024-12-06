@@ -54,10 +54,11 @@ class _EditListScreenState extends State<EditListScreen> {
       context: context,
       initialTime: _selectedTime,
     );
-    if (picked != null && picked != _selectedTime)
+    if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
       });
+    }
   }
 
   // 중요도 선택 위젯

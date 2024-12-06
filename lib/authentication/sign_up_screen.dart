@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:mirum_list/const/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mirum_list/authentication/sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -15,7 +14,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
   String _errorMessage = '';
@@ -138,7 +138,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           setState(() {
                             _errorMessage = '이메일 중복 확인 완료!';
                           });
-                          // 추가적인 중복 확인 로직이 필요하다면 Firestore에서 사용자 존재 여부 확인
                         }
                       },
                       style: ElevatedButton.styleFrom(
