@@ -300,8 +300,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
 
                                         if (difference.inDays < 1) {
                                           return lightRedColor; // 1일 이내 빨간색
-                                        } else if (difference.inDays <= 7) {
-                                          return lightYellowColor; // 1주일 이내 노란색
+                                        } else if (difference.inDays < 3) {
+                                          return lightYellowColor; // 3일 이내 노란색
                                         } else {
                                           return lightgreenColor; // 그 외 초록색
                                         }
